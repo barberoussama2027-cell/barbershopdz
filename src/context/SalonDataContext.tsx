@@ -315,22 +315,34 @@ export const SalonDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     async (id: string): Promise<{ error: string | null }> => {
       if (isDemoMode) {
         const allProfiles = readLS(LS_KEYS.profiles, DEMO_PROFILES);
-        const next = allProfiles.filter((p) => p.id !== id);
-        localStorage.setItem(LS_KEYS.profiles, JSON.stringify(next));
-        setProfiles(next);
+        const nextProfiles = allProfiles.filter((p) => p.id !== id);
+        localStorage.setItem(LS_KEYS.profiles, JSON.stringify(nextProfiles));
+        setProfiles(nextProfiles);
+
+        // Supprimer également tous les gains / transactions du poste supprimé
+        const allTx = readLS(LS_KEYS.transactions, DEMO_TRANSACTIONS);
+        const nextTx = allTx.filter((t) => t.barber_id !== id);
+        localStorage.setItem(LS_KEYS.transactions, JSON.stringify(nextTx));
+        setTransactions(nextTx);
         return { error: null };
       }
 
       if (!supabase) return { error: 'Supabase non configuré' };
-      const { error } = await supabase.from('profiles').delete().eq('id', id);
-      if (error) {
-        // Si le coiffeur a déjà des transactions (contrainte FK ON DELETE RESTRICT), on désactive le compte
-        const { error: softErr } = await supabase
-          .from('profiles')
-          .update({ is_active: false })
-          .eq('id', id);
-        if (softErr) return { error: softErr.message };
+
+      // 1. Tenter la suppression complète via la fonction RPC (supprime transactions + profil + auth.users)
+      const { error: rpcErr } = await supabase.rpc('delete_barber_account', {
+        barber_id_to_delete: id,
+      });
+
+      if (rpcErr) {
+        // Fallback standard : suppression explicite des transactions puis du profil
+        const { error: txErr } = await supabase.from('transactions').delete().eq('barber_id', id);
+        if (txErr) return { error: txErr.message };
+
+        const { error: profErr } = await supabase.from('profiles').delete().eq('id', id);
+        if (profErr) return { error: profErr.message };
       }
+
       await reloadAll();
       return { error: null };
     },
