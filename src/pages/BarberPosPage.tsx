@@ -150,9 +150,9 @@ export const BarberPosPage: React.FC = () => {
       <div className="rounded-2xl bg-slate-900/70 border border-slate-800 p-5 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <h3 className="font-semibold text-white">{t('pos.myHistory')}</h3>
-          <span className="inline-flex items-center gap-1.5 text-xs text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            {t('pos.privacyNote')}
+          <span className="inline-flex items-center gap-1.5 text-xs text-amber-400 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20">
+            <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
+            {t('pos.lockedNotice')}
           </span>
         </div>
 
