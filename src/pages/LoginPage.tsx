@@ -171,15 +171,18 @@ export const LoginPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
-              <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300 hover:text-white select-none">
+            <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-amber-500/40 transition">
+              <label className="flex items-center justify-between cursor-pointer select-none">
+                <span className="flex items-center gap-2 text-xs font-semibold text-slate-200">
+                  <span className="w-2 h-2 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50" />
+                  {t('auth.rememberMe')}
+                </span>
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-amber-500 focus:ring-amber-500 accent-amber-500 cursor-pointer"
+                  className="w-4 h-4 rounded accent-amber-500 cursor-pointer"
                 />
-                <span>{t('auth.rememberMe')}</span>
               </label>
             </div>
 
