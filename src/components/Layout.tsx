@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Scissors,
   LayoutDashboard,
   Users,
   Receipt,
@@ -12,6 +11,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useSalonData } from '../context/SalonDataContext';
+import { BarberLogo } from './BarberLogo';
 
 export type ManagerTab = 'dashboard' | 'barbers' | 'expenses' | 'settings';
 
@@ -36,7 +36,7 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen text-slate-100 flex flex-col">
       {isDemoMode && (
         <div className="bg-amber-500/15 border-b border-amber-500/30 px-4 py-2 text-xs sm:text-sm text-amber-200 flex items-center justify-center gap-2 text-center">
           <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
@@ -47,16 +47,16 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
       <div className="flex flex-1 min-h-0">
         {/* Sidebar Desktop & Tablette (Gérant uniquement) */}
         {isGerant && onTabChange && (
-          <aside className="hidden md:flex md:w-64 lg:w-72 md:flex-col shrink-0 border-e border-slate-800/80 bg-slate-900/60 backdrop-blur-xl">
-            <div className="p-5 lg:p-6 border-b border-slate-800/80 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 shrink-0">
-                <Scissors className="w-5 h-5" />
-              </div>
+          <aside className="hidden md:flex md:w-64 lg:w-72 md:flex-col shrink-0 border-e border-amber-500/15 bg-[#0a0d14]/90 backdrop-blur-2xl">
+            <div className="p-5 lg:p-6 border-b border-amber-500/10 flex items-center gap-3.5">
+              <BarberLogo size="md" />
               <div className="min-w-0">
-                <h1 className="font-display font-bold text-base text-white truncate">
+                <h1 className="font-display font-bold text-base lg:text-lg gold-gradient-text truncate">
                   {salonSettings.salon_name}
                 </h1>
-                <p className="text-xs text-amber-400/90 font-medium">{t('roles.gerant')}</p>
+                <p className="text-[11px] uppercase tracking-wider text-amber-400/80 font-semibold">
+                  {t('roles.gerant')}
+                </p>
               </div>
             </div>
 
@@ -109,19 +109,17 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
         <div className="flex-1 flex flex-col min-w-0">
           {/* Top Bar (Mobile pour Gérant, ou Permanent pour Coiffeur) */}
           <header
-            className={`sticky top-0 z-30 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3 ${
+            className={`sticky top-0 z-30 border-b border-amber-500/15 bg-[#07090e]/85 backdrop-blur-2xl px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3 ${
               isGerant ? 'md:hidden' : ''
             }`}
           >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 shrink-0">
-                <Scissors className="w-4 h-4" />
-              </div>
+              <BarberLogo size="sm" />
               <div className="min-w-0">
-                <h1 className="font-display font-bold text-sm sm:text-base text-white truncate">
+                <h1 className="font-display font-bold text-sm sm:text-base gold-gradient-text truncate">
                   {salonSettings.salon_name}
                 </h1>
-                <p className="text-xs text-amber-400 truncate">
+                <p className="text-xs text-amber-400/90 truncate">
                   {profile?.full_name} •{' '}
                   {profile?.station_name || t(`roles.${profile?.role ?? 'coiffeur'}`)}
                 </p>
