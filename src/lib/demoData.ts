@@ -2,7 +2,7 @@ import type { Expense, Profile, SalonSettings, Service, Transaction } from '../t
 
 export const DEMO_SALON_SETTINGS: SalonSettings = {
   id: 1,
-  salon_name: "L'Atelier Barber DZ",
+  salon_name: 'Oussama Barber',
   currency: 'DZD',
   updated_at: new Date().toISOString(),
 };
