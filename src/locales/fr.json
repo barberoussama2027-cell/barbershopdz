@@ -90,7 +90,7 @@
     "salonEarnings": "Part Salon",
     "cutsCount": "Prestations",
     "toggleActive": "Compte actif",
-    "deleteConfirm": "Désactiver ou supprimer ce poste ? L'historique financier est conservé.",
+    "deleteConfirm": "Supprimer définitivement ce poste ? Toutes les prestations et tous les gains associés à ce coiffeur seront supprimés définitivement.",
     "createdSuccess": "Compte coiffeur créé avec succès",
     "updatedSuccess": "Poste mis à jour",
     "deletedSuccess": "Poste supprimé"
