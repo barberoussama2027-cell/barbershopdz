@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-arabic: 'Cairo', system-ui, -apple-system, sans-serif;
+  }
+
+  html[dir="ltr"] body {
+    font-family: var(--font-sans);
+  }
+
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic);
+  }
+}
+
+.font-display {
+  font-family: var(--font-serif);
+}
+
+html[dir="rtl"] .font-display {
+  font-family: var(--font-arabic);
+}
+
+/* Custom subtle scrollbars for dark barbershop theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
+}
