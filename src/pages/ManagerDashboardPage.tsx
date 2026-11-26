@@ -193,28 +193,28 @@ export const ManagerDashboardPage: React.FC = () => {
       </div>
 
       {/* 4 Main KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 lg:p-6 shadow-lg">
           <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
             <span>{t('dashboard.grossRevenue')}</span>
-            <div className="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center">
-              <TrendingUp className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center">
+              <TrendingUp className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-white mt-3">{formatDZD(kpis.grossRevenue)}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-white mt-3">{formatDZD(kpis.grossRevenue)}</p>
           <p className="text-xs text-slate-400 mt-1.5">
             {kpis.totalCuts} {t('dashboard.totalCuts').toLowerCase()}
           </p>
         </div>
 
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5">
+        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 lg:p-6 shadow-lg">
           <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
             <span>{t('dashboard.barberCommissions')}</span>
-            <div className="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center">
-              <Users className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center">
+              <Users className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-sky-300 mt-3">
+          <p className="text-2xl sm:text-3xl font-bold text-sky-300 mt-3">
             {formatDZD(kpis.barberCommissions)}
           </p>
           <p className="text-xs text-slate-400 mt-1.5">
@@ -222,21 +222,21 @@ export const ManagerDashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5">
+        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 lg:p-6 shadow-lg">
           <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
             <span>{t('dashboard.totalExpenses')}</span>
-            <div className="w-9 h-9 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center">
-              <Receipt className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center">
+              <Receipt className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-rose-300 mt-3">{formatDZD(kpis.totalExpenses)}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-rose-300 mt-3">{formatDZD(kpis.totalExpenses)}</p>
           <p className="text-xs text-slate-400 mt-1.5">
             {filteredExpenses.length} {t('nav.expenses').toLowerCase()}
           </p>
         </div>
 
         <div
-          className={`rounded-2xl p-5 border ${
+          className={`rounded-2xl p-5 lg:p-6 border shadow-lg ${
             kpis.netMargin >= 0
               ? 'bg-gradient-to-br from-emerald-950/80 to-slate-900 border-emerald-500/40'
               : 'bg-gradient-to-br from-rose-950/80 to-slate-900 border-rose-500/40'
@@ -244,12 +244,12 @@ export const ManagerDashboardPage: React.FC = () => {
         >
           <div className="flex items-center justify-between text-slate-300 text-xs font-semibold">
             <span>{t('dashboard.netMargin')}</span>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-              <Wallet className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+              <Wallet className="w-5 h-5" />
             </div>
           </div>
           <p
-            className={`text-2xl font-extrabold mt-3 ${
+            className={`text-2xl sm:text-3xl font-extrabold mt-3 ${
               kpis.netMargin >= 0 ? 'text-emerald-400' : 'text-rose-400'
             }`}
           >
