@@ -169,13 +169,13 @@ export const ManagerDashboardPage: React.FC = () => {
       {/* Header + Period Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-white">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold gold-gradient-text">
             {t('dashboard.title')}
           </h2>
           <p className="text-sm text-slate-400 mt-1">{t('dashboard.subtitle')}</p>
         </div>
 
-        <div className="inline-flex p-1 rounded-2xl bg-slate-900 border border-slate-800 self-start">
+        <div className="inline-flex p-1 rounded-2xl bg-slate-900/90 border border-amber-500/20 self-start shadow-inner">
           {periods.map((p) => (
             <button
               key={p}
@@ -194,7 +194,7 @@ export const ManagerDashboardPage: React.FC = () => {
 
       {/* 4 Main KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 lg:p-6 shadow-lg">
+        <div className="premium-card rounded-2xl border border-amber-500/20 p-5 lg:p-6">
           <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
             <span>{t('dashboard.grossRevenue')}</span>
             <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center">
@@ -207,7 +207,7 @@ export const ManagerDashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 lg:p-6 shadow-lg">
+        <div className="premium-card rounded-2xl border border-slate-800 p-5 lg:p-6">
           <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
             <span>{t('dashboard.barberCommissions')}</span>
             <div className="w-10 h-10 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center">
@@ -222,7 +222,7 @@ export const ManagerDashboardPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 lg:p-6 shadow-lg">
+        <div className="premium-card rounded-2xl border border-slate-800 p-5 lg:p-6">
           <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
             <span>{t('dashboard.totalExpenses')}</span>
             <div className="w-10 h-10 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center">
