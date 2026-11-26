@@ -45,11 +45,11 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
       )}
 
       <div className="flex flex-1 min-h-0">
-        {/* Sidebar Desktop (Gérant uniquement) */}
+        {/* Sidebar Desktop & Tablette (Gérant uniquement) */}
         {isGerant && onTabChange && (
-          <aside className="hidden lg:flex lg:w-68 lg:flex-col border-e border-slate-800/80 bg-slate-900/60 backdrop-blur-xl">
-            <div className="p-6 border-b border-slate-800/80 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950">
+          <aside className="hidden md:flex md:w-64 lg:w-72 md:flex-col shrink-0 border-e border-slate-800/80 bg-slate-900/60 backdrop-blur-xl">
+            <div className="p-5 lg:p-6 border-b border-slate-800/80 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 shrink-0">
                 <Scissors className="w-5 h-5" />
               </div>
               <div className="min-w-0">
@@ -60,7 +60,7 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
               </div>
             </div>
 
-            <nav className="flex-1 p-4 space-y-1.5">
+            <nav className="flex-1 p-3.5 lg:p-4 space-y-1.5">
               {navItems.map((item) => {
                 const active = activeTab === item.id;
                 return (
@@ -74,13 +74,13 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
                     }`}
                   >
                     {item.icon}
-                    <span>{item.label}</span>
+                    <span className="truncate">{item.label}</span>
                   </button>
                 );
               })}
             </nav>
 
-            <div className="p-4 border-t border-slate-800/80 space-y-3">
+            <div className="p-3.5 lg:p-4 border-t border-slate-800/80 space-y-3">
               <div className="px-3 py-2.5 rounded-xl bg-slate-800/50 border border-slate-700/50">
                 <p className="text-sm font-semibold text-white truncate">{profile?.full_name}</p>
                 <p className="text-xs text-slate-400 truncate">{profile?.email}</p>
@@ -107,10 +107,10 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
 
         {/* Main column */}
         <div className="flex-1 flex flex-col min-w-0">
-          {/* Top Bar (Mobile/Tablet pour Gérant, ou Permanent pour Coiffeur) */}
+          {/* Top Bar (Mobile pour Gérant, ou Permanent pour Coiffeur) */}
           <header
-            className={`sticky top-0 z-30 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3 ${
-              isGerant ? 'lg:hidden' : ''
+            className={`sticky top-0 z-30 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3 ${
+              isGerant ? 'md:hidden' : ''
             }`}
           >
             <div className="flex items-center gap-3 min-w-0">
@@ -147,15 +147,15 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
           </header>
 
           {/* Content */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-7xl w-full mx-auto">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-20 md:pb-8 max-w-7xl 2xl:max-w-[1600px] w-full mx-auto">
             {children}
           </main>
         </div>
       </div>
 
-      {/* Bottom Navigation Mobile/Tablette (Gérant uniquement) */}
+      {/* Bottom Navigation Mobile uniquement (Gérant uniquement sur smartphone) */}
       {isGerant && onTabChange && (
-        <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-2 py-1.5 flex justify-around">
+        <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-2 py-1.5 flex justify-around">
           {navItems.map((item) => {
             const active = activeTab === item.id;
             return (
