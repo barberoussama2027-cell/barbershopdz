@@ -44,7 +44,7 @@ export const RevenueProfitChart: React.FC<{ data: ChartPoint[] }> = ({ data }) =
         )}
       </div>
 
-      <div className="h-56 flex items-end gap-1.5 sm:gap-2.5 pt-4 border-b border-slate-800 pb-2">
+      <div className="h-56 sm:h-64 lg:h-72 flex items-end gap-1.5 sm:gap-2.5 pt-4 border-b border-slate-800 pb-2">
         {data.map((point, idx) => {
           const revH = Math.max(4, Math.round((point.revenue / maxVal) * 100));
           const netH = Math.max(
@@ -111,7 +111,7 @@ export const TrafficBarChart: React.FC<{ data: TrafficPoint[]; accent?: 'amber' 
   const maxCount = Math.max(1, ...data.map((d) => d.count));
 
   return (
-    <div className="h-44 flex items-end gap-1.5 sm:gap-2 pt-4 border-b border-slate-800 pb-2">
+    <div className="h-44 sm:h-48 lg:h-56 flex items-end gap-1.5 sm:gap-2 pt-4 border-b border-slate-800 pb-2">
       {data.map((d) => {
         const heightPct = d.count === 0 ? 3 : Math.max(8, Math.round((d.count / maxCount) * 100));
         return (
