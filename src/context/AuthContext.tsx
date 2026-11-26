@@ -27,9 +27,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
 
-    if (error || !data) return null;
+    if (error) {
+      console.error('[BarberShop] fetchSupabaseProfile error:', error.code, error.message, error.details);
+      return null;
+    }
+    if (!data) {
+      console.warn('[BarberShop] fetchSupabaseProfile: no profile found for uid', userId);
+      return null;
+    }
     return data as Profile;
   }, []);
 
@@ -118,7 +125,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: 'auth.invalidCredentials' };
       }
       const prof = await fetchSupabaseProfile(data.user.id);
-      if (!prof || !prof.is_active) {
+      if (!prof) {
+        console.error('[BarberShop] signIn: profile not found after sign-in for user', data.user.id);
+        await supabase.auth.signOut();
+        return { error: 'auth.profileNotFound' };
+      }
+      if (!prof.is_active) {
         await supabase.auth.signOut();
         return { error: 'auth.inactiveAccount' };
       }
