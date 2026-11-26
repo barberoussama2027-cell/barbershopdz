@@ -8,6 +8,7 @@ import {
   BarChart3,
   Clock,
   Calendar,
+  Trash2,
 } from 'lucide-react';
 import { useSalonData } from '../context/SalonDataContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -31,9 +32,14 @@ function getPeriodStart(period: PeriodFilter): Date {
 }
 
 export const ManagerDashboardPage: React.FC = () => {
-  const { transactions, expenses, profiles } = useSalonData();
+  const { transactions, expenses, profiles, deleteTransaction } = useSalonData();
   const { language, t, formatDZD } = useLanguage();
   const [period, setPeriod] = useState<PeriodFilter>('month');
+
+  const handleDeleteTx = async (id: string) => {
+    if (!window.confirm(t('dashboard.deleteTxConfirm'))) return;
+    await deleteTransaction(id);
+  };
 
   const periodStart = useMemo(() => getPeriodStart(period), [period]);
 
@@ -323,10 +329,15 @@ export const ManagerDashboardPage: React.FC = () => {
         </div>
 
         <div className="rounded-2xl bg-slate-900/80 border border-slate-800 p-5">
-          <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-            <Scissors className="w-4 h-4 text-amber-400" />
-            {t('dashboard.recentTransactions')}
-          </h3>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-4">
+            <h3 className="font-semibold text-white flex items-center gap-2">
+              <Scissors className="w-4 h-4 text-amber-400" />
+              {t('dashboard.recentTransactions')}
+            </h3>
+            <span className="text-[11px] text-amber-400/80">
+              {t('dashboard.onlyGerantCanDelete')}
+            </span>
+          </div>
           <div className="space-y-2.5 max-h-80 overflow-y-auto pe-1">
             {filteredTx.slice(0, 12).map((tx) => {
               const barber = profiles.find((p) => p.id === tx.barber_id);
@@ -347,11 +358,20 @@ export const ManagerDashboardPage: React.FC = () => {
                       )}
                     </p>
                   </div>
-                  <div className="text-end shrink-0 ms-3">
-                    <p className="font-bold text-amber-400">{formatDZD(tx.amount)}</p>
-                    <p className="text-[11px] text-emerald-400">
-                      +{formatDZD(tx.salon_share)} {t('dashboard.salonShare').toLowerCase()}
-                    </p>
+                  <div className="flex items-center gap-2.5 shrink-0 ms-3">
+                    <div className="text-end">
+                      <p className="font-bold text-amber-400">{formatDZD(tx.amount)}</p>
+                      <p className="text-[11px] text-emerald-400">
+                        +{formatDZD(tx.salon_share)} {t('dashboard.salonShare').toLowerCase()}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => void handleDeleteTx(tx.id)}
+                      className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition cursor-pointer"
+                      title={t('app.delete')}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               );
