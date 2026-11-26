@@ -7,13 +7,14 @@ import {
   LogOut,
   Languages,
   AlertTriangle,
+  Scissors,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useSalonData } from '../context/SalonDataContext';
 import { BarberLogo } from './BarberLogo';
 
-export type ManagerTab = 'dashboard' | 'barbers' | 'expenses' | 'settings';
+export type ManagerTab = 'dashboard' | 'barbers' | 'expenses' | 'settings' | 'caisse';
 
 interface LayoutProps {
   activeTab?: ManagerTab;
@@ -30,6 +31,7 @@ export const Layout: React.FC<LayoutProps> = ({ activeTab, onTabChange, children
 
   const navItems: { id: ManagerTab; label: string; icon: React.ReactNode }[] = [
     { id: 'dashboard', label: t('nav.dashboard'), icon: <LayoutDashboard className="w-5 h-5" /> },
+    { id: 'caisse', label: t('nav.caisse'), icon: <Scissors className="w-5 h-5" /> },
     { id: 'barbers', label: t('nav.barbers'), icon: <Users className="w-5 h-5" /> },
     { id: 'expenses', label: t('nav.expenses'), icon: <Receipt className="w-5 h-5" /> },
     { id: 'settings', label: t('nav.settings'), icon: <Settings className="w-5 h-5" /> },
