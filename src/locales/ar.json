@@ -29,6 +29,7 @@
     "signOut": "تسجيل الخروج",
     "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
     "inactiveAccount": "هذا الحساب معطل. يرجى الاتصال بالمسير.",
+    "profileNotFound": "الملف الشخصي غير موجود. تأكد من تنفيذ SQL في Supabase (جدول profiles).",
     "demoQuickLogin": "دخول سريع (تجريبي)",
     "demoGerant": "مساحة المسير",
     "demoCoiffeur1": "الكرسي 1 — كريم",
