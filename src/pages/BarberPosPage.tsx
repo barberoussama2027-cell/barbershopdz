@@ -15,6 +15,7 @@ export const BarberPosPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
+  const isGerant = profile?.role === 'gerant';
   const activeServices = useMemo(() => services.filter((s) => s.is_active), [services]);
 
   // Isolation stricte : uniquement les transactions de ce coiffeur
@@ -76,7 +77,9 @@ export const BarberPosPage: React.FC = () => {
           <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-semibold">
             <Sparkles className="w-4 h-4 text-amber-400" />
             <span>
-              {t('pos.commissionBadge')}: {commissionRate}%
+              {isGerant
+                ? t('roles.gerant')
+                : `${t('pos.commissionBadge')}: ${commissionRate}%`}
             </span>
           </div>
         </div>
@@ -175,7 +178,9 @@ export const BarberPosPage: React.FC = () => {
 
             <div className="inline-flex items-center gap-1.5 text-[11px] text-amber-400 bg-amber-500/10 px-3 py-1.5 rounded-xl border border-amber-500/20 w-full">
               <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-amber-400" />
-              <span className="truncate">{t('pos.lockedNotice')}</span>
+              <span className="truncate">
+                {isGerant ? t('dashboard.onlyGerantCanDelete') : t('pos.lockedNotice')}
+              </span>
             </div>
 
             <div className="space-y-2 max-h-72 lg:max-h-[380px] overflow-y-auto pe-1">
