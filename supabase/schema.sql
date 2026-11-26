@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS public.services (
 -- Transactions / Prestations encaissées
 CREATE TABLE IF NOT EXISTS public.transactions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  barber_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE RESTRICT,
+  barber_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   service_id UUID REFERENCES public.services(id) ON DELETE SET NULL,
   service_name_fr TEXT NOT NULL,
   service_name_ar TEXT NOT NULL,
@@ -193,6 +193,36 @@ CREATE TRIGGER trg_compute_transaction_shares
   BEFORE INSERT ON public.transactions
   FOR EACH ROW
   EXECUTE FUNCTION public.compute_transaction_shares();
+
+-- Fonction de suppression complète d'un poste (coiffeur, ses gains, son accès)
+CREATE OR REPLACE FUNCTION public.delete_barber_account(barber_id_to_delete UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NOT public.is_gerant() THEN
+    RAISE EXCEPTION 'Action non autorisée : seul le gérant peut supprimer un poste.';
+  END IF;
+
+  IF barber_id_to_delete = auth.uid() THEN
+    RAISE EXCEPTION 'Impossible de supprimer le compte du gérant principal.';
+  END IF;
+
+  -- 1. Supprimer toutes les transactions / gains associés
+  DELETE FROM public.transactions WHERE barber_id = barber_id_to_delete;
+
+  -- 2. Détacher les dépenses créées par ce coiffeur
+  UPDATE public.expenses SET created_by = NULL WHERE created_by = barber_id_to_delete;
+
+  -- 3. Supprimer le profil du coiffeur dans public.profiles
+  DELETE FROM public.profiles WHERE id = barber_id_to_delete;
+
+  -- 4. Supprimer le compte dans auth.users
+  DELETE FROM auth.users WHERE id = barber_id_to_delete;
+END;
+$$;
 
 -- ============================================================================
 -- 3. ACTIVATION & POLITIQUES RLS (ROW LEVEL SECURITY)
