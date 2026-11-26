@@ -15,11 +15,30 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 const DEMO_USER_KEY = 'barbershopdz_demo_user';
+const CACHED_PROFILE_KEY = 'barbershopdz_active_profile';
+
+function readCachedProfile(): Profile | null {
+  try {
+    const raw = localStorage.getItem(CACHED_PROFILE_KEY);
+    return raw ? (JSON.parse(raw) as Profile) : null;
+  } catch {
+    return null;
+  }
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfileState] = useState<Profile | null>(() => readCachedProfile());
+  const [loading, setLoading] = useState(() => !readCachedProfile());
   const isDemoMode = !isSupabaseConfigured;
+
+  const setProfile = useCallback((p: Profile | null) => {
+    setProfileState(p);
+    if (p) {
+      localStorage.setItem(CACHED_PROFILE_KEY, JSON.stringify(p));
+    } else {
+      localStorage.removeItem(CACHED_PROFILE_KEY);
+    }
+  }, []);
 
   const fetchSupabaseProfile = useCallback(async (userId: string) => {
     if (!supabase) return null;
@@ -60,44 +79,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    const { data: sessionData } = await supabase.auth.getSession();
-    const user = sessionData.session?.user;
-    if (!user) {
-      setProfile(null);
-      setLoading(false);
-      return;
-    }
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData.session?.user;
+      if (!user) {
+        setProfile(null);
+        setLoading(false);
+        return;
+      }
 
-    const prof = await fetchSupabaseProfile(user.id);
-    if (prof && !prof.is_active) {
-      await supabase.auth.signOut();
-      setProfile(null);
-    } else {
-      setProfile(prof);
+      const prof = await fetchSupabaseProfile(user.id);
+      if (prof) {
+        if (!prof.is_active) {
+          await supabase.auth.signOut().catch(() => {});
+          setProfile(null);
+        } else {
+          setProfile(prof);
+        }
+      }
+      // Si prof est temporairement null (réseau/veille), on conserve le profil en cache
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [fetchSupabaseProfile, isDemoMode]);
+  }, [fetchSupabaseProfile, isDemoMode, setProfile]);
 
   useEffect(() => {
     void refreshProfile();
 
     if (!supabase) return;
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session?.user) {
+    const client = supabase;
+    const { data: listener } = client.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT' || (!session?.user && event !== 'INITIAL_SESSION')) {
         setProfile(null);
         setLoading(false);
-      } else {
-        void fetchSupabaseProfile(session.user.id).then((prof) => {
-          setProfile(prof);
-          setLoading(false);
-        });
+      } else if (session?.user) {
+        const prof = await fetchSupabaseProfile(session.user.id);
+        if (prof) {
+          if (!prof.is_active) {
+            await client.auth.signOut().catch(() => {});
+            setProfile(null);
+          } else {
+            setProfile(prof);
+          }
+        }
+        setLoading(false);
       }
     });
 
     return () => {
       listener.subscription.unsubscribe();
     };
-  }, [fetchSupabaseProfile, refreshProfile]);
+  }, [fetchSupabaseProfile, refreshProfile, setProfile]);
 
   const signIn = useCallback(
     async (email: string, password: string): Promise<{ error: string | null }> => {
@@ -153,16 +185,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signOut = useCallback(async () => {
-    if (isDemoMode) {
-      localStorage.removeItem(DEMO_USER_KEY);
-      setProfile(null);
-      return;
-    }
+    localStorage.removeItem(DEMO_USER_KEY);
+    localStorage.removeItem(CACHED_PROFILE_KEY);
     if (supabase) {
-      await supabase.auth.signOut();
+      await supabase.auth.signOut().catch(() => {});
     }
     setProfile(null);
-  }, [isDemoMode]);
+  }, [setProfile]);
 
   return (
     <AuthContext.Provider
