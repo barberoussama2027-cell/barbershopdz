@@ -70,6 +70,7 @@ interface SalonDataContextValue {
   updateSalonName: (salonName: string) => Promise<{ error: string | null }>;
   saveService: (input: SaveServiceInput) => Promise<{ error: string | null }>;
   deleteService: (id: string) => Promise<{ error: string | null }>;
+  deleteTransaction: (id: string) => Promise<{ error: string | null }>;
 }
 
 const SalonDataContext = createContext<SalonDataContextValue | undefined>(undefined);
@@ -509,6 +510,25 @@ export const SalonDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [isDemoMode, reloadAll]
   );
 
+  const deleteTransaction = useCallback(
+    async (id: string): Promise<{ error: string | null }> => {
+      if (isDemoMode) {
+        const allTx = readLS(LS_KEYS.transactions, DEMO_TRANSACTIONS);
+        const next = allTx.filter((t) => t.id !== id);
+        localStorage.setItem(LS_KEYS.transactions, JSON.stringify(next));
+        setTransactions(next);
+        return { error: null };
+      }
+
+      if (!supabase) return { error: 'Supabase non configuré' };
+      const { error } = await supabase.from('transactions').delete().eq('id', id);
+      if (error) return { error: error.message };
+      await reloadAll();
+      return { error: null };
+    },
+    [isDemoMode, reloadAll]
+  );
+
   return (
     <SalonDataContext.Provider
       value={{
@@ -528,6 +548,7 @@ export const SalonDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         updateSalonName,
         saveService,
         deleteService,
+        deleteTransaction,
       }}
     >
       {children}
