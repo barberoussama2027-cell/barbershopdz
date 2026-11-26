@@ -29,6 +29,7 @@
     "signOut": "Déconnexion",
     "invalidCredentials": "Email ou mot de passe incorrect",
     "inactiveAccount": "Ce compte est désactivé. Contactez le gérant.",
+    "profileNotFound": "Profil introuvable. Vérifiez que le schéma SQL a été exécuté dans Supabase (table profiles).",
     "demoQuickLogin": "Connexion rapide (Démo)",
     "demoGerant": "Espace Gérant",
     "demoCoiffeur1": "Poste 1 — Karim",
