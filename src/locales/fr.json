@@ -68,6 +68,8 @@
     "dailyTrafficTitle": "Affluence par Jour",
     "barberPerformance": "Performance par Poste",
     "recentTransactions": "Dernières Prestations",
+    "deleteTxConfirm": "Supprimer définitivement cette prestation ? Les recettes et commissions seront recalculées.",
+    "onlyGerantCanDelete": "Seul le gérant a le droit de modifier ou supprimer des prestations.",
     "viewAll": "Tout voir",
     "salonShare": "Part Salon",
     "barberShare": "Part Coiffeur"
@@ -148,6 +150,7 @@
     "weekCuts": "Clients cette semaine",
     "commissionBadge": "Taux de commission",
     "myHistory": "Mes Dernières Prestations",
+    "lockedNotice": "Verrouillé : Seul le gérant peut annuler ou modifier une prestation.",
     "privacyNote": "Espace personnel sécurisé — Seuls vos propres gains sont visibles."
   }
 }
