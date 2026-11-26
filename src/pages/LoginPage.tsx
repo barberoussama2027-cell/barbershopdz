@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Scissors, Lock, Mail, Languages, Sparkles, UserCheck, X } from 'lucide-react';
+import { Lock, Mail, Languages, Sparkles, UserCheck, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useSalonData } from '../context/SalonDataContext';
+import { BarberLogo } from '../components/BarberLogo';
 
 interface SavedAccount {
   email: string;
@@ -15,6 +17,7 @@ const SAVED_ACCOUNTS_KEY = 'barbershopdz_saved_accounts';
 export const LoginPage: React.FC = () => {
   const { signIn, signInDemo, isDemoMode } = useAuth();
   const { language, toggleLanguage, t } = useLanguage();
+  const { salonSettings } = useSalonData();
 
   const [rememberMe, setRememberMe] = useState(() => {
     return localStorage.getItem(REMEMBER_ME_KEY) !== 'false';
@@ -79,29 +82,32 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-4 relative overflow-hidden">
-      {/* Decorative ambient glows */}
-      <div className="pointer-events-none absolute -top-32 -start-32 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -end-32 w-96 h-96 rounded-full bg-amber-600/10 blur-3xl" />
+    <div className="min-h-screen text-slate-100 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Decorative luxury ambient glows */}
+      <div className="pointer-events-none absolute -top-40 -start-40 w-[480px] h-[480px] rounded-full bg-amber-500/10 blur-[110px]" />
+      <div className="pointer-events-none absolute -bottom-40 -end-40 w-[480px] h-[480px] rounded-full bg-amber-600/10 blur-[110px]" />
 
       <div className="w-full max-w-md relative z-10 space-y-6">
         <div className="flex justify-end">
           <button
             onClick={toggleLanguage}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/40 text-xs font-semibold text-slate-200 transition cursor-pointer"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900/80 border border-amber-500/20 hover:border-amber-400/50 text-xs font-semibold text-slate-200 transition cursor-pointer backdrop-blur-md"
           >
             <Languages className="w-4 h-4 text-amber-400" />
             <span>{language === 'fr' ? 'العربية' : 'Français'}</span>
           </button>
         </div>
 
-        <div className="rounded-3xl bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-6 sm:p-8 shadow-2xl">
+        <div className="premium-card rounded-3xl border border-amber-500/20 p-6 sm:p-8 shadow-2xl">
           <div className="flex flex-col items-center text-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-xl shadow-amber-500/20 mb-4">
-              <Scissors className="w-8 h-8" />
-            </div>
-            <h1 className="font-display text-2xl font-bold text-white">{t('auth.loginTitle')}</h1>
-            <p className="text-sm text-slate-400 mt-1.5">{t('auth.loginSubtitle')}</p>
+            <BarberLogo size="lg" className="mb-4" />
+            <h1 className="font-display text-3xl font-extrabold gold-gradient-text tracking-tight">
+              {salonSettings.salon_name || 'Oussama Barber'}
+            </h1>
+            <p className="text-xs uppercase tracking-[0.2em] text-amber-400/75 font-semibold mt-1">
+              {t('auth.loginTitle')}
+            </p>
+            <p className="text-sm text-slate-400 mt-2">{t('auth.loginSubtitle')}</p>
           </div>
 
           {savedAccounts.length > 0 && (
