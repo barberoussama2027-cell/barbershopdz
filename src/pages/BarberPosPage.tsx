@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useSalonData } from '../context/SalonDataContext';
 import { useLanguage } from '../context/LanguageContext';
 import type { Service } from '../types';
+import { BarberLogo } from '../components/BarberLogo';
 
 export const BarberPosPage: React.FC = () => {
   const { profile } = useAuth();
@@ -58,13 +59,11 @@ export const BarberPosPage: React.FC = () => {
   return (
     <div className="space-y-5 lg:space-y-6 max-w-7xl 2xl:max-w-[1600px] mx-auto">
       {/* Top Header Bar: Greeting + Station Badge + Commission */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 sm:p-5 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-amber-500/20 shrink-0">
-            <Scissors className="w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
+      <div className="premium-card flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border border-amber-500/20 rounded-2xl p-4 sm:p-5">
+        <div className="flex items-center gap-3.5">
+          <BarberLogo size="md" />
           <div>
-            <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+            <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold gold-gradient-text">
               {t('pos.welcome')}, {profile?.full_name}
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
@@ -94,7 +93,7 @@ export const BarberPosPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
         {/* Left Area (8 cols on lg+): 2-Click Touch POS tiles */}
         <div className="lg:col-span-7 xl:col-span-8 space-y-4">
-          <div className="rounded-3xl bg-slate-900/80 border border-slate-800 p-4 sm:p-6 lg:p-7 shadow-xl">
+          <div className="premium-card rounded-3xl border border-amber-500/15 p-4 sm:p-6 lg:p-7">
             <div className="flex items-center justify-between mb-5">
               <div>
                 <h3 className="font-bold text-base sm:text-lg lg:text-xl text-white flex items-center gap-2.5">
