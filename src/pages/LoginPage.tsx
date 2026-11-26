@@ -1,16 +1,54 @@
 import React, { useState } from 'react';
-import { Scissors, Lock, Mail, Languages, Sparkles, UserCheck } from 'lucide-react';
+import { Scissors, Lock, Mail, Languages, Sparkles, UserCheck, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+
+interface SavedAccount {
+  email: string;
+  lastUsed: number;
+}
+
+const REMEMBER_ME_KEY = 'barbershopdz_remember_me';
+const SAVED_EMAIL_KEY = 'barbershopdz_saved_email';
+const SAVED_ACCOUNTS_KEY = 'barbershopdz_saved_accounts';
 
 export const LoginPage: React.FC = () => {
   const { signIn, signInDemo, isDemoMode } = useAuth();
   const { language, toggleLanguage, t } = useLanguage();
 
-  const [email, setEmail] = useState('');
+  const [rememberMe, setRememberMe] = useState(() => {
+    return localStorage.getItem(REMEMBER_ME_KEY) !== 'false';
+  });
+
+  const [email, setEmail] = useState(() => {
+    return localStorage.getItem(SAVED_EMAIL_KEY) || '';
+  });
+
   const [password, setPassword] = useState('');
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const [savedAccounts, setSavedAccounts] = useState<SavedAccount[]>(() => {
+    try {
+      const raw = localStorage.getItem(SAVED_ACCOUNTS_KEY);
+      return raw ? (JSON.parse(raw) as SavedAccount[]) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const removeSavedAccount = (accEmail: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = savedAccounts.filter(
+      (a) => a.email.toLowerCase() !== accEmail.toLowerCase()
+    );
+    localStorage.setItem(SAVED_ACCOUNTS_KEY, JSON.stringify(updated));
+    setSavedAccounts(updated);
+    if (email.toLowerCase() === accEmail.toLowerCase()) {
+      localStorage.removeItem(SAVED_EMAIL_KEY);
+      setEmail('');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,8 +56,25 @@ export const LoginPage: React.FC = () => {
     setSubmitting(true);
     const { error } = await signIn(email, password);
     setSubmitting(false);
+
     if (error) {
       setErrorKey(error);
+    } else {
+      if (rememberMe) {
+        localStorage.setItem(REMEMBER_ME_KEY, 'true');
+        localStorage.setItem(SAVED_EMAIL_KEY, email.trim());
+        const updated = [
+          { email: email.trim(), lastUsed: Date.now() },
+          ...savedAccounts.filter(
+            (a) => a.email.toLowerCase() !== email.trim().toLowerCase()
+          ),
+        ].slice(0, 4);
+        localStorage.setItem(SAVED_ACCOUNTS_KEY, JSON.stringify(updated));
+        setSavedAccounts(updated);
+      } else {
+        localStorage.setItem(REMEMBER_ME_KEY, 'false');
+        localStorage.removeItem(SAVED_EMAIL_KEY);
+      }
     }
   };
 
@@ -48,6 +103,38 @@ export const LoginPage: React.FC = () => {
             <h1 className="font-display text-2xl font-bold text-white">{t('auth.loginTitle')}</h1>
             <p className="text-sm text-slate-400 mt-1.5">{t('auth.loginSubtitle')}</p>
           </div>
+
+          {savedAccounts.length > 0 && (
+            <div className="mb-5 p-3 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-2">
+              <p className="text-[11px] font-semibold text-slate-400">
+                {t('auth.savedAccounts')}
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {savedAccounts.map((acc) => (
+                  <button
+                    key={acc.email}
+                    type="button"
+                    onClick={() => setEmail(acc.email)}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer border ${
+                      email.toLowerCase() === acc.email.toLowerCase()
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
+                        : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700'
+                    }`}
+                  >
+                    <UserCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span className="truncate max-w-[170px]">{acc.email}</span>
+                    <span
+                      onClick={(e) => removeSavedAccount(acc.email, e)}
+                      title={t('auth.removeAccount')}
+                      className="p-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-rose-400 ms-1 cursor-pointer"
+                    >
+                      <X className="w-3 h-3" />
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
             <div>
@@ -82,6 +169,18 @@ export const LoginPage: React.FC = () => {
                   className="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-xl ps-10 pe-4 py-3 text-sm text-white placeholder:text-slate-600 outline-none transition"
                 />
               </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-1">
+              <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-300 hover:text-white select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-amber-500 focus:ring-amber-500 accent-amber-500 cursor-pointer"
+                />
+                <span>{t('auth.rememberMe')}</span>
+              </label>
             </div>
 
             {errorKey && (
