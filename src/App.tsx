@@ -38,6 +38,7 @@ const AppRouter: React.FC = () => {
   return (
     <Layout activeTab={managerTab} onTabChange={setManagerTab}>
       {managerTab === 'dashboard' && <ManagerDashboardPage />}
+      {managerTab === 'caisse' && <BarberPosPage />}
       {managerTab === 'barbers' && <BarbersPage />}
       {managerTab === 'expenses' && <ExpensesPage />}
       {managerTab === 'settings' && <SettingsPage />}
