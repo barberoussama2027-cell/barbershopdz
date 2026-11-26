@@ -345,3 +345,17 @@ SELECT * FROM (
     ('Coupe Enfant', 'حلاقة أطفال', 400, 20, 'coupe', 7)
 ) AS v(name_fr, name_ar, price, duration_min, category, sort_order)
 WHERE NOT EXISTS (SELECT 1 FROM public.services LIMIT 1);
+
+-- ============================================================================
+-- 5. PERMISSIONS (GRANTS)
+-- ============================================================================
+
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL ROUTINES IN SCHEMA public TO anon, authenticated, service_role;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON ROUTINES TO anon, authenticated, service_role;
+
