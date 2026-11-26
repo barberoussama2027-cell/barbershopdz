@@ -14,13 +14,13 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- Paramètres du salon (1 seule ligne)
 CREATE TABLE IF NOT EXISTS public.salon_settings (
   id INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
-  salon_name TEXT NOT NULL DEFAULT 'L''Atelier Barber DZ',
+  salon_name TEXT NOT NULL DEFAULT 'Oussama Barber',
   currency TEXT NOT NULL DEFAULT 'DZD',
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 INSERT INTO public.salon_settings (id, salon_name, currency)
-VALUES (1, 'L''Atelier Barber DZ', 'DZD')
+VALUES (1, 'Oussama Barber', 'DZD')
 ON CONFLICT (id) DO NOTHING;
 
 -- Profils utilisateurs liés à auth.users
